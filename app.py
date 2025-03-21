@@ -5,8 +5,8 @@ st.set_page_config(page_title="Directorio de Apps", layout="wide")
 st.title("Directorio de Aplicaciones")
 
 # --- Configuración del administrador ---
-ADMIN_USUARIO = "admin"
-ADMIN_CLAVE = "1234"  # Puedes cambiar esta clave por una más segura
+ADMIN_USUARIO = "ivanedu113   "
+ADMIN_CLAVE = "EMVac1997-"  # Puedes cambiar esta clave por una más segura
 
 # --- Inicializar almacenamiento en memoria ---
 if "apps" not in st.session_state:

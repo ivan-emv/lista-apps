@@ -2,35 +2,40 @@ import streamlit as st
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
-st.title("🔧 Test de conexión a Google Sheets")
+st.set_page_config(page_title="Test de Google Sheets", layout="wide")
+st.title("🔧 Test de conexión con Google Sheets")
 
-# Nombre de la hoja y pestaña que creaste
+# Datos de tu hoja de cálculo
 SHEET_NAME = "Directorio Apps"
 WORKSHEET_NAME = "Apps"
 
-# Conexión a Google Sheets
+# Función para conectar a Google Sheets
 def conectar_gsheet():
-    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+    scope = [
+        "https://spreadsheets.google.com/feeds",
+        "https://www.googleapis.com/auth/drive"
+    ]
     creds_dict = st.secrets["gcp_service_account"]
     creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
     client = gspread.authorize(creds)
-    return client.open(SHEET_NAME).worksheet(WORKSHEET_NAME)
+    sheet = client.open(SHEET_NAME).worksheet(WORKSHEET_NAME)
+    return sheet
 
+# Intentar conexión
 try:
     hoja = conectar_gsheet()
     st.success("✅ Conexión exitosa a Google Sheets")
 
-    # Mostrar contenido de la hoja (primeros 10 registros)
+    # Mostrar contenido actual
     datos = hoja.get_all_records()
-    st.write("📋 Contenido actual de la hoja:")
+    st.write("📋 Datos actuales:")
     st.dataframe(datos)
 
-    # Agregar una fila de prueba (comentada por si no deseas escribir nada)
+    # Opción para agregar una fila de prueba
     if st.button("➕ Agregar fila de prueba"):
-        hoja.append_row(["App de prueba", "Descripción de prueba", "https://prueba.app"])
-        st.success("Fila de prueba agregada correctamente")
+        hoja.append_row(["App de prueba", "Esta es una prueba desde Streamlit", "https://appdeprueba.com"])
+        st.success("✅ Fila de prueba agregada correctamente")
 
 except Exception as e:
     st.error("❌ Error al conectar con Google Sheets:")
     st.text(f"{type(e).__name__}: {e}")
-

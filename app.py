@@ -41,11 +41,20 @@ with st.sidebar:
     st.markdown("### 🔐 Acceso de administrador")
     usuario = st.text_input("Usuario")
     clave = st.text_input("Contraseña", type="password")
-    es_admin = usuario == "ivanedu113" and clave == "EMVac1997-"
+    es_admin = usuario == "ivan.amador" and clave == "EMVac1997-"
+
+# Bandera para evitar rerun directo dentro del formulario
+if "app_agregada" not in st.session_state:
+    st.session_state.app_agregada = False
 
 # Mostrar formulario solo para admins
 if es_admin:
     st.success("Modo administrador activado. Puedes agregar nuevas aplicaciones.")
+
+    if st.session_state.app_agregada:
+        st.session_state.app_agregada = False
+        st.experimental_rerun()
+
     with st.form("formulario_agregar"):
         nombre = st.text_input("Nombre de la Aplicación")
         descripcion = st.text_area("Descripción")
@@ -57,7 +66,7 @@ if es_admin:
             st.session_state.apps = pd.concat([st.session_state.apps, nueva_fila], ignore_index=True)
             guardar_datos(hoja, st.session_state.apps)
             st.success("✅ Aplicación agregada exitosamente")
-            st.experimental_rerun()
+            st.session_state.app_agregada = True
 else:
     st.info("🔍 Solo lectura. Inicia sesión como administrador para agregar aplicaciones.")
 

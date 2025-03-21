@@ -32,4 +32,5 @@ try:
 
 except Exception as e:
     st.error("❌ Error al conectar con Google Sheets:")
-    st.exception(e)
+    st.text(f"{type(e).__name__}: {e}")
+
